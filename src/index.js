@@ -90,7 +90,11 @@ class Game extends React.Component {
 
     let status;
     if (settlement) {
-      status = 'Winner: ' + settlement.winner;
+      if (settlement.isDraw) {
+        status = 'Draw';
+      } else {
+        status = 'Winner: ' + settlement.winner;
+      }
     } else {
       status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
     }
@@ -147,9 +151,17 @@ function calculateWinner(squares) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return {
+        isDraw: false,
         winner: squares[a],
         line: [a, b, c]
       };
+    }
+  }
+  if (squares.filter((e) => !e).length === 0) {
+    return {
+      isDraw: true,
+      winner: null,
+      line: []
     }
   }
   return null;
